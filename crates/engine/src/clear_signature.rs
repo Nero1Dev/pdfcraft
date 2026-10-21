@@ -434,6 +434,15 @@ fn blocker(fields: &[SignedField], name: &str) -> Option<(Blocker, ClearError)> 
 /// unchanged, when another signature's certification or lock forbids it, or when the result
 /// would have references it didn't have before.
 pub fn clear(doc: &mut Document, name: &str, remove_field: bool) -> Result<Cleared, ClearError> {
+    // A failure part way (a parent that can't be updated, say) must not leave a half-removed
+    // field: work on a copy (clones share all unchanged data) and keep it only on success.
+    let mut work = doc.clone();
+    let done = clear_in(&mut work, name, remove_field)?;
+    *doc = work;
+    Ok(done)
+}
+
+fn clear_in(doc: &mut Document, name: &str, remove_field: bool) -> Result<Cleared, ClearError> {
     let fields = signed_fields(doc);
     let target = match fields.iter().find(|f| f.name == name) {
         Some(f) => f,
@@ -900,6 +909,30 @@ mod tests {
         assert_eq!(problems(&doc).len(), 1);
         clear(&mut doc, "Signature1", true).unwrap();
         assert_eq!(problems(&doc).len(), 1, "the old problem is still there, and nothing was added");
+    }
+
+    #[test]
+    fn a_failure_part_way_leaves_the_document_unchanged() {
+        let (mut doc, page, form) = base();
+        let v = doc.add(dict(vec![(b"Type", Object::name("Sig"))]));
+        // An empty parent whose own parent is a missing object: pruning it fails after the
+        // field itself has already been taken out.
+        let missing = ObjRef { num: 900, generation: 0 };
+        let parent = doc.add(dict(vec![(b"T", PdfString::text("a").into()), (b"Parent", Object::Ref(missing))]));
+        let leaf = doc.add(dict(vec![
+            (b"T", PdfString::text("b").into()),
+            (b"Parent", Object::Ref(parent)),
+            (b"FT", Object::name("Sig")),
+            (b"V", Object::Ref(v)),
+            (b"Subtype", Object::name("Widget")),
+            (b"Rect", Object::Array(vec![0.into(), 0.into(), 10.into(), 10.into()])),
+        ]));
+        add_to(&mut doc, page, b"Annots", leaf);
+        doc.update_dict(parent, |d| d.set(b"Kids".to_vec(), arr(&[leaf]))).unwrap();
+        doc.update_dict(form, |d| d.set(b"Fields".to_vec(), arr(&[parent]))).unwrap();
+        let before = doc.clone();
+        assert!(clear(&mut doc, "a.b", true).is_err());
+        assert_eq!((doc.get(parent), doc.get(leaf), annots(&doc, page)), (before.get(parent), before.get(leaf), annots(&before, page)));
     }
 
     #[test]
