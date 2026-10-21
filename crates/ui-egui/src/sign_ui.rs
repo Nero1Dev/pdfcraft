@@ -1404,13 +1404,21 @@ impl PdfCraftApp {
                 app.remove_signature_to(id, &chosen, keep_field, &dest.to_string_lossy());
             });
         }
+        // The browser saves by downloading, with nowhere to choose first: remove, then download,
+        // and undo the removal if the download fails.
         #[cfg(target_arch = "wasm32")]
         {
             let _ = stem;
-            if self.apply_removal(id, &chosen, keep_field).is_ok()
-                && let Some(index) = self.views.iter().position(|v| v.id == id)
-            {
-                self.save_view(index, crate::SaveTarget::As);
+            let label = match self.apply_removal(id, &chosen, keep_field) {
+                Ok(label) => label,
+                Err(e) => {
+                    self.notify_fmt("The signature was not removed: {e}", &[("e", &e)]);
+                    return;
+                }
+            };
+            let saved = self.views.iter().position(|v| v.id == id).is_some_and(|index| self.save_view(index, crate::SaveTarget::As));
+            if !saved {
+                self.undo_back_through(id, label);
             }
         }
     }
@@ -1445,7 +1453,6 @@ impl PdfCraftApp {
 
     /// Undo edits until the one labelled `label` is undone: the removal, and whatever saving
     /// added after it (flattening Fill & Sign marks, when that preference is on).
-    #[cfg(not(target_arch = "wasm32"))]
     fn undo_back_through(&mut self, id: DocId, label: &str) {
         // A save adds at most one edit of its own; the bound keeps a mismatch from undoing more.
         for _ in 0..4 {
@@ -1586,11 +1593,20 @@ pub(crate) fn remove_dialog(ui: &mut egui::Ui, app: &mut PdfCraftApp, t: &Tokens
         }
     });
     let Some(chosen) = d.chosen().cloned() else {
+        // Nothing chosen yet: a blocked one was asked for (from its row in the Signatures panel),
+        // or none can be removed at all.
+        let any = d.items.iter().any(|r| r.blocked.is_none());
         ui.add_space(8.0);
-        ui.label(egui::RichText::new(tl!("None of these signatures can be removed.")).color(t.text_muted));
+        let text = if any { tl!("Choose a signature that can be removed.") } else { tl!("None of these signatures can be removed.") };
+        ui.label(egui::RichText::new(text).color(t.text_muted));
         ui.add_space(12.0);
         let mut close = false;
-        ui.with_layout(Layout::right_to_left(Align::Center), |ui| close = widgets::pill_button(ui, tl!("Close"), true).clicked());
+        ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+            close = widgets::pill_button(ui, if any { tl!("Cancel") } else { tl!("Close") }, !any).clicked();
+        });
+        if close {
+            app.remove_sig = None;
+        }
         return close;
     };
     ui.add_space(8.0);

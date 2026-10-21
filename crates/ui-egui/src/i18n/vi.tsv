@@ -2800,7 +2800,8 @@ key	Space	Space
 	The fields this signature locked ({names}) can be changed again.	Các trường mà chữ ký này khóa ({names}) sẽ có thể thay đổi lại.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Vẫn còn chữ ký khác nên bản sao được lưu như một bản cập nhật của tệp đã ký: chữ ký đã gỡ vẫn nằm trong bản sửa đổi trước và có thể khôi phục từ đó.
 	{names} certifies this document without allowing comments, and will report this change.	{names} chứng nhận tài liệu này mà không cho phép chú thích và sẽ báo thay đổi này.
-	A document timestamp is not in a field, so it can't be removed on its own.	Dấu thời gian của tài liệu không nằm trong trường nên không thể gỡ riêng.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Dấu thời gian của tài liệu bao trùm toàn bộ tệp và không phải chữ ký của ai, nên không thể gỡ riêng.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} chứng nhận tài liệu này, và việc gỡ chữ ký không phải là thay đổi mà chứng nhận đó cho phép.
 	The signature {names} locks this field.	Chữ ký {names} khóa trường này.
 	This document can't be changed: {names}	Không thể thay đổi tài liệu này: {names}
+	Choose a signature that can be removed.	Hãy chọn một chữ ký có thể gỡ.

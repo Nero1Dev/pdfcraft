@@ -2821,7 +2821,8 @@ certificate	Version	الإصدار
 	The fields this signature locked ({names}) can be changed again.	ستصبح الحقول التي كان هذا التوقيع يقفلها ({names}) قابلة للتغيير من جديد.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	لا تزال هناك توقيعات أخرى، لذا تُحفظ النسخة كتحديث للملف الموقّع: يبقى التوقيع المُزال في المراجعة السابقة ويمكن استعادته منها.
 	{names} certifies this document without allowing comments, and will report this change.	{names} يصدّق هذا المستند دون السماح بالتعليقات، وسيُبلغ بهذا التغيير.
-	A document timestamp is not in a field, so it can't be removed on its own.	الختم الزمني للمستند ليس في حقل، لذا لا يمكن إزالته وحده.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	يشمل الختم الزمني للمستند الملف كله وليس توقيعًا لأحد، لذا لا يمكن إزالته وحده.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} يصدّق هذا المستند، وإزالة توقيع ليست تغييرًا يسمح به هذا التصديق.
 	The signature {names} locks this field.	التوقيع {names} يقفل هذا الحقل.
 	This document can't be changed: {names}	لا يمكن تغيير هذا المستند: {names}
+	Choose a signature that can be removed.	اختر توقيعًا يمكن إزالته.

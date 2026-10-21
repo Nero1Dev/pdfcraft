@@ -2761,7 +2761,8 @@ certificate	SHA-256 digest	Impronta SHA-256
 	The fields this signature locked ({names}) can be changed again.	I campi bloccati da questa firma ({names}) potranno di nuovo essere modificati.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Restano altre firme, quindi la copia viene salvata come aggiornamento del file firmato: la firma rimossa resta nella revisione precedente, da cui può essere recuperata.
 	{names} certifies this document without allowing comments, and will report this change.	{names} certifica questo documento senza consentire commenti e segnalerà questa modifica.
-	A document timestamp is not in a field, so it can't be removed on its own.	Una marca temporale del documento non si trova in un campo, quindi non può essere rimossa da sola.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Una marca temporale del documento copre tutto il file e non è la firma di nessuno, quindi non può essere rimossa da sola.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} certifica questo documento, e rimuovere una firma non è una modifica consentita dalla sua certificazione.
 	The signature {names} locks this field.	La firma {names} blocca questo campo.
 	This document can't be changed: {names}	Questo documento non può essere modificato: {names}
+	Choose a signature that can be removed.	Scegli una firma che si possa rimuovere.

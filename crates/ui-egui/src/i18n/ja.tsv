@@ -2545,7 +2545,8 @@ animation effects	Off	オフ
 	The fields this signature locked ({names}) can be changed again.	この署名がロックしていたフィールド（{names}）を再び変更できるようになります。
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	ほかの署名が残っているため、コピーは署名済みファイルへの追加更新として保存されます。削除した署名は以前のリビジョンに残り、そこから復元できます。
 	{names} certifies this document without allowing comments, and will report this change.	{names} は注釈を許可せずにこの文書を証明しており、この変更を報告します。
-	A document timestamp is not in a field, so it can't be removed on its own.	文書タイムスタンプはフィールドにないため、それだけを削除することはできません。
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	文書タイムスタンプはファイル全体を対象とし、誰かの署名ではないため、それだけを削除することはできません。
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} がこの文書を証明しており、署名の削除はその証明で許可された変更ではありません。
 	The signature {names} locks this field.	署名 {names} がこのフィールドをロックしています。
 	This document can't be changed: {names}	この文書は変更できません: {names}
+	Choose a signature that can be removed.	削除できる署名を選んでください。

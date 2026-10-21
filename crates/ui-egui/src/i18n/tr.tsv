@@ -2541,7 +2541,8 @@ animation effects	Off	Kapalı
 	The fields this signature locked ({names}) can be changed again.	Bu imzanın kilitlediği alanlar ({names}) yeniden değiştirilebilecek.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Başka imzalar kaldığı için kopya, imzalı dosyanın bir güncellemesi olarak kaydedilir: kaldırılan imza önceki revizyonda kalır ve oradan kurtarılabilir.
 	{names} certifies this document without allowing comments, and will report this change.	{names} bu belgeyi yorumlara izin vermeden sertifikalıyor ve bu değişikliği bildirecek.
-	A document timestamp is not in a field, so it can't be removed on its own.	Belge zaman damgası bir alanda bulunmadığı için tek başına kaldırılamaz.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Belge zaman damgası tüm dosyayı kapsar ve kimsenin imzası değildir, bu yüzden tek başına kaldırılamaz.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} bu belgeyi sertifikalıyor ve bir imzayı kaldırmak, bu sertifikanın izin verdiği bir değişiklik değil.
 	The signature {names} locks this field.	{names} imzası bu alanı kilitliyor.
 	This document can't be changed: {names}	Bu belge değiştirilemez: {names}
+	Choose a signature that can be removed.	Kaldırılabilecek bir imza seçin.

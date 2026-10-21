@@ -2454,7 +2454,8 @@ animation effects	Off	ఆఫ్
 	The fields this signature locked ({names}) can be changed again.	ఈ సంతకం లాక్ చేసిన ఫీల్డ్‌లను ({names}) మళ్లీ మార్చవచ్చు.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	ఇతర సంతకాలు మిగిలి ఉన్నందున, కాపీ సంతకం చేసిన ఫైల్‌కు అప్‌డేట్‌గా సేవ్ అవుతుంది: తొలగించిన సంతకం మునుపటి రివిజన్‌లోనే ఉంటుంది, అక్కడి నుండి దాన్ని తిరిగి పొందవచ్చు.
 	{names} certifies this document without allowing comments, and will report this change.	{names} వ్యాఖ్యలను అనుమతించకుండా ఈ పత్రాన్ని సర్టిఫై చేస్తుంది, ఈ మార్పును నివేదిస్తుంది.
-	A document timestamp is not in a field, so it can't be removed on its own.	పత్రం టైమ్‌స్టాంప్ ఫీల్డ్‌లో ఉండదు, కాబట్టి దాన్ని ఒక్కదాన్నే తొలగించలేము.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	పత్రం టైమ్‌స్టాంప్ మొత్తం ఫైల్‌ను కవర్ చేస్తుంది, అది ఎవరి సంతకమూ కాదు, కాబట్టి దాన్ని ఒక్కదాన్నే తొలగించలేము.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} ఈ పత్రాన్ని సర్టిఫై చేస్తుంది, సంతకాన్ని తొలగించడం ఆ సర్టిఫికేషన్ అనుమతించే మార్పు కాదు.
 	The signature {names} locks this field.	సంతకం {names} ఈ ఫీల్డ్‌ను లాక్ చేస్తుంది.
 	This document can't be changed: {names}	ఈ పత్రాన్ని మార్చలేము: {names}
+	Choose a signature that can be removed.	తొలగించగల సంతకాన్ని ఎంచుకోండి.

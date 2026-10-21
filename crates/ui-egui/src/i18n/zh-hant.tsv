@@ -2495,7 +2495,8 @@ animation effects	Off	關
 	The fields this signature locked ({names}) can be changed again.	此簽章鎖定的欄位（{names}）將可以再次變更。
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	仍有其他簽章，因此副本會作為已簽署檔案的增量更新儲存：已移除的簽章保留在較早的修訂版中，可以從那裡復原。
 	{names} certifies this document without allowing comments, and will report this change.	{names} 認證此文件且不允許註解，會回報此變更。
-	A document timestamp is not in a field, so it can't be removed on its own.	文件時間戳記不在欄位中，因此無法單獨移除。
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	文件時間戳記涵蓋整個檔案，不屬於任何人的簽章，因此無法單獨移除。
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} 認證此文件，而移除簽章不是該認證允許的變更。
 	The signature {names} locks this field.	簽章 {names} 鎖定了此欄位。
 	This document can't be changed: {names}	無法變更此文件：{names}
+	Choose a signature that can be removed.	請選擇一個可以移除的簽章。

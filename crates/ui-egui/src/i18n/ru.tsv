@@ -2458,7 +2458,8 @@ animation effects	Off	Выкл
 	The fields this signature locked ({names}) can be changed again.	Поля, которые блокировала эта подпись ({names}), снова можно будет изменять.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Остались другие подписи, поэтому копия сохраняется как обновление подписанного файла: удалённая подпись остаётся в предыдущей редакции, откуда её можно восстановить.
 	{names} certifies this document without allowing comments, and will report this change.	{names} сертифицирует этот документ без разрешения комментариев и сообщит об этом изменении.
-	A document timestamp is not in a field, so it can't be removed on its own.	Метка времени документа не находится в поле, поэтому её нельзя удалить отдельно.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Метка времени документа охватывает весь файл и не является чьей-либо подписью, поэтому её нельзя удалить отдельно.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} сертифицирует этот документ, а удаление подписи не входит в изменения, разрешённые этой сертификацией.
 	The signature {names} locks this field.	Подпись {names} блокирует это поле.
 	This document can't be changed: {names}	Этот документ нельзя изменить: {names}
+	Choose a signature that can be removed.	Выберите подпись, которую можно удалить.

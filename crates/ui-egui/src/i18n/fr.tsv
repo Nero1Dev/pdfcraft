@@ -2545,7 +2545,8 @@ animation effects	Off	Désactivés
 	The fields this signature locked ({names}) can be changed again.	Les champs verrouillés par cette signature ({names}) pourront de nouveau être modifiés.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	D'autres signatures restent, la copie est donc enregistrée comme mise à jour du fichier signé : la signature supprimée reste dans sa révision précédente, d'où elle peut être récupérée.
 	{names} certifies this document without allowing comments, and will report this change.	{names} certifie ce document sans autoriser les commentaires et signalera cette modification.
-	A document timestamp is not in a field, so it can't be removed on its own.	Un horodatage du document n'est pas dans un champ : il ne peut donc pas être supprimé seul.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Un horodatage du document couvre tout le fichier et n'est la signature de personne : il ne peut donc pas être supprimé seul.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} certifie ce document, et supprimer une signature n'est pas une modification autorisée par sa certification.
 	The signature {names} locks this field.	La signature {names} verrouille ce champ.
 	This document can't be changed: {names}	Ce document ne peut pas être modifié : {names}
+	Choose a signature that can be removed.	Choisissez une signature pouvant être supprimée.

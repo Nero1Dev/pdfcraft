@@ -142,7 +142,7 @@ fn a_certified_documents_other_signature_is_refused_with_the_reason() {
         Err(ToolError::Failed(m)) => assert!(m.contains("certifies"), "{m}"),
         other => panic!("{other:?}"),
     }
-    assert!(ok(&mut a, "doc_info", json!({ "doc": doc }))["dirty"] != true, "a refusal changes nothing");
+    assert_eq!(ok(&mut a, "doc_info", json!({ "doc": doc }))["document"]["dirty"], false, "a refusal changes nothing");
 }
 
 #[test]
@@ -154,4 +154,48 @@ fn bad_arguments_say_what_is_allowed() {
     }
     assert!(matches!(a.call("sign_clear", &json!({ "doc": doc, "item": 99 })), Err(ToolError::InvalidArgs(m)) if m.contains("not in")));
     assert!(matches!(a.call("sign_clear", &json!({ "doc": doc, "field": "nope" })), Err(ToolError::Failed(m)) if m.contains("no signature")));
+}
+
+#[test]
+fn a_visual_signature_is_numbered_as_the_comment_tools_number_it() {
+    let dir = workdir("visual");
+    let mut a = auto(&dir);
+    let doc = ok(&mut a, "doc_open", json!({ "path": "a.pdf" }))["doc"].as_u64().unwrap();
+    ok(&mut a, "fill_sign_add", json!({ "doc": doc, "page": 1, "type": "check", "at": [20, 80] }));
+    ok(&mut a, "fill_sign_add", json!({ "doc": doc, "page": 1, "type": "signature", "at": [20, 140], "text": "Ada" }));
+    let list = ok(&mut a, "sign_removable", json!({ "doc": doc }));
+    assert_eq!(list["count"], 1, "the check mark is not a signature: {list}");
+    let at = list["items"][0]["annotation"].clone();
+    // The same numbers comment_list gives the signature (the check mark comes first).
+    let comments = ok(&mut a, "comment_list", json!({ "doc": doc }));
+    let indexes: Vec<&Value> = comments["comments"].as_array().unwrap().iter().map(|c| &c["index"]).collect();
+    assert_eq!((at["page"].as_u64(), at["index"].as_u64()), (Some(1), Some(2)), "{comments}");
+    assert!(indexes.contains(&&json!(2)), "{comments}");
+    ok(&mut a, "sign_clear", json!({ "doc": doc, "item": 0 }));
+    assert_eq!(ok(&mut a, "sign_removable", json!({ "doc": doc }))["count"], 0);
+    assert_eq!(ok(&mut a, "comment_list", json!({ "doc": doc }))["comments"].as_array().unwrap().len(), 1, "the check mark stays");
+}
+
+/// A document secured with "fill-sign" changes, opened without its permissions password: its
+/// signature can't be removed, and the listing says so before anything is tried.
+#[test]
+fn security_that_forbids_changes_is_said_in_the_listing() {
+    let dir = workdir("secured");
+    let mut a = auto(&dir);
+    ok(&mut a, "sign_id_create", json!({ "name": "Ada Lovelace", "key": "p256", "password": "secret12", "path": "ada.p12" }));
+    let doc = ok(&mut a, "doc_open", json!({ "path": "a.pdf" }))["doc"].as_u64().unwrap();
+    let field = ok(&mut a, "form_add_field", json!({ "doc": doc, "page": 1, "type": "signature", "rect": [20, 200, 180, 250] }))["field"]
+        .as_str()
+        .unwrap()
+        .to_owned();
+    ok(&mut a, "doc_protect", json!({ "doc": doc, "permissions_password": "boss", "changes": "fill-sign" }));
+    ok(&mut a, "doc_save", json!({ "doc": doc, "path": "form.pdf" }));
+    let mut b = auto(&dir);
+    let form = ok(&mut b, "doc_open", json!({ "path": "form.pdf" }))["doc"].as_u64().unwrap();
+    ok(&mut b, "sign_document", json!({ "doc": form, "id": "ada.p12", "password": "secret12", "field": field, "out": "signed.pdf" }));
+    let list = ok(&mut b, "sign_removable", json!({ "doc": form }));
+    let item = &list["items"][0];
+    assert_eq!(item["removable"], false, "{list}");
+    assert!(item["blocked"].as_str().unwrap().contains("security"), "{list}");
+    assert!(matches!(b.call("sign_clear", &json!({ "doc": form, "field": field })), Err(ToolError::Failed(m)) if m.contains("security")));
 }

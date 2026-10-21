@@ -2546,7 +2546,8 @@ animation effects	Off	Aus
 	The fields this signature locked ({names}) can be changed again.	Die von dieser Signatur gesperrten Felder ({names}) können wieder geändert werden.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Es gibt noch andere Signaturen, daher wird die Kopie als Aktualisierung der signierten Datei gespeichert: Die entfernte Signatur bleibt in ihrer früheren Revision, aus der sie wiederhergestellt werden kann.
 	{names} certifies this document without allowing comments, and will report this change.	{names} zertifiziert dieses Dokument ohne Kommentare zu erlauben und wird diese Änderung melden.
-	A document timestamp is not in a field, so it can't be removed on its own.	Ein Dokumentzeitstempel steht in keinem Feld und kann daher nicht einzeln entfernt werden.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Ein Dokumentzeitstempel umfasst die ganze Datei und ist niemandes Signatur, daher kann er nicht einzeln entfernt werden.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} zertifiziert dieses Dokument, und das Entfernen einer Signatur ist keine Änderung, die diese Zertifizierung erlaubt.
 	The signature {names} locks this field.	Die Signatur {names} sperrt dieses Feld.
 	This document can't be changed: {names}	Dieses Dokument kann nicht geändert werden: {names}
+	Choose a signature that can be removed.	Wählen Sie eine Signatur, die entfernt werden kann.

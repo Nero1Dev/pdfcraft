@@ -2799,7 +2799,8 @@ theme	Appearance	Išvaizda
 	The fields this signature locked ({names}) can be changed again.	Laukus, kuriuos užrakino šis parašas ({names}), vėl bus galima keisti.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Lieka kitų parašų, todėl kopija įrašoma kaip pasirašyto failo atnaujinimas: pašalintas parašas lieka ankstesnėje redakcijoje, iš kurios jį galima atkurti.
 	{names} certifies this document without allowing comments, and will report this change.	{names} patvirtina šį dokumentą neleisdamas komentarų ir praneš apie šį pakeitimą.
-	A document timestamp is not in a field, so it can't be removed on its own.	Dokumento laiko žyma nėra lauke, todėl jos negalima pašalinti atskirai.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Dokumento laiko žyma apima visą failą ir nėra niekieno parašas, todėl jos negalima pašalinti atskirai.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} patvirtina šį dokumentą, o parašo šalinimas nėra pakeitimas, kurį leidžia šis patvirtinimas.
 	The signature {names} locks this field.	Parašas {names} užrakina šį lauką.
 	This document can't be changed: {names}	Šio dokumento keisti negalima: {names}
+	Choose a signature that can be removed.	Pasirinkite parašą, kurį galima pašalinti.

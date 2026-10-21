@@ -2550,7 +2550,8 @@ animation effects	Off	Izklopljeni
 	The fields this signature locked ({names}) can be changed again.	Polja, ki jih je ta podpis zaklepal ({names}), bo mogoče znova spreminjati.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Drugi podpisi ostajajo, zato se kopija shrani kot posodobitev podpisane datoteke: odstranjeni podpis ostane v prejšnji reviziji, od koder ga je mogoče obnoviti.
 	{names} certifies this document without allowing comments, and will report this change.	{names} overja ta dokument brez dovoljenja za komentarje in bo poročal o tej spremembi.
-	A document timestamp is not in a field, so it can't be removed on its own.	Časovni žig dokumenta ni v polju, zato ga ni mogoče odstraniti samostojno.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Časovni žig dokumenta zajema celotno datoteko in ni nikogaršnji podpis, zato ga ni mogoče odstraniti samostojno.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} overja ta dokument, odstranitev podpisa pa ni sprememba, ki jo ta overitev dovoljuje.
 	The signature {names} locks this field.	Podpis {names} zaklepa to polje.
 	This document can't be changed: {names}	Tega dokumenta ni mogoče spremeniti: {names}
+	Choose a signature that can be removed.	Izberite podpis, ki ga je mogoče odstraniti.

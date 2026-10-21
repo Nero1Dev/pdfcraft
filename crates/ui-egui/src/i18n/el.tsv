@@ -2551,7 +2551,8 @@ animation effects	Off	Ανενεργά
 	The fields this signature locked ({names}) can be changed again.	Τα πεδία που κλείδωνε αυτή η υπογραφή ({names}) θα μπορούν να αλλάξουν ξανά.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Παραμένουν άλλες υπογραφές, οπότε το αντίγραφο αποθηκεύεται ως ενημέρωση του υπογεγραμμένου αρχείου: η υπογραφή που αφαιρέθηκε μένει στην προηγούμενη αναθεώρηση, από όπου μπορεί να ανακτηθεί.
 	{names} certifies this document without allowing comments, and will report this change.	Η υπογραφή {names} πιστοποιεί αυτό το έγγραφο χωρίς να επιτρέπει σχόλια και θα αναφέρει αυτή την αλλαγή.
-	A document timestamp is not in a field, so it can't be removed on its own.	Μια χρονοσήμανση εγγράφου δεν βρίσκεται σε πεδίο, οπότε δεν μπορεί να αφαιρεθεί μόνη της.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Μια χρονοσήμανση εγγράφου καλύπτει όλο το αρχείο και δεν είναι υπογραφή κανενός, οπότε δεν μπορεί να αφαιρεθεί μόνη της.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	Η υπογραφή {names} πιστοποιεί αυτό το έγγραφο, και η αφαίρεση υπογραφής δεν είναι αλλαγή που επιτρέπει η πιστοποίηση.
 	The signature {names} locks this field.	Η υπογραφή {names} κλειδώνει αυτό το πεδίο.
 	This document can't be changed: {names}	Αυτό το έγγραφο δεν μπορεί να αλλάξει: {names}
+	Choose a signature that can be removed.	Επιλέξτε μια υπογραφή που μπορεί να αφαιρεθεί.

@@ -177,3 +177,26 @@ fn a_failed_save_undoes_the_removal_even_after_flattening_marks() {
     assert!(doc.is_signed(), "the removal was undone, not only the flattening");
     assert_eq!(doc.can_undo().map(str::to_owned), before, "back to the state before the removal");
 }
+
+// From the panel row of a signature that can't be removed, the dialog shows why and asks for
+// one that can, instead of saying none can.
+#[test]
+fn a_blocked_signature_asked_for_from_the_panel_asks_for_another() {
+    let dir = dir();
+    let mut h = signed(&dir);
+    let id = h.state().views[0].id;
+    let field = h.state().session.get(id).unwrap().signatures[0].field.clone();
+    // Block it by hand, as a certification by another signature would.
+    h.state_mut().start_remove_signature(Some(&field));
+    {
+        let d = h.state_mut().remove_sig.as_mut().unwrap();
+        d.items.push(d.items[0].clone());
+        d.items[0].blocked = Some(pdfcraft_engine::clear_signature::Blocker::LockedBy("Other".into()));
+        d.selected = Some(0);
+    }
+    h.run_steps(3);
+    h.get_by_label("Choose a signature that can be removed.");
+    h.get_by_label("Cancel").click();
+    h.run_steps(2);
+    assert!(h.state().dialog.is_none() && h.state().remove_sig.is_none());
+}

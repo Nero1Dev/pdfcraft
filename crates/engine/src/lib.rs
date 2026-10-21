@@ -4893,10 +4893,19 @@ impl Session {
         let doc = self.get(id).ok_or(EditError::NoDocument)?;
         let editor = doc.editor.as_ref().ok_or_else(|| EditError::ReadOnly(doc.read_only_reason.clone().unwrap_or_default()))?;
         let mut list = guard(|| clear_signature::removable(&editor.cos, &doc.signatures)).map_err(EditError::Sign)?;
-        if let Some(reason) = &doc.read_only_reason {
-            for r in list.iter_mut().filter(|r| r.blocked.is_none()) {
-                r.blocked = Some(clear_signature::Blocker::ReadOnly(reason.clone()));
-            }
+        for r in list.iter_mut().filter(|r| r.blocked.is_none()) {
+            // What applying the edit would check (`check_permission`): a visual signature is a
+            // comment, a digital one changes the document.
+            let why = match (&doc.read_only_reason, &r.target) {
+                (Some(reason), _) => Some(reason.clone()),
+                (None, clear_signature::Target::Annotation { .. }) if !doc.allows_annotation() => {
+                    Some("its security doesn't allow changing comments".into())
+                }
+                (None, clear_signature::Target::Annotation { .. }) => None,
+                (None, _) if !doc.allows_modification() => Some("its security doesn't allow changing it".into()),
+                (None, _) => None,
+            };
+            r.blocked = why.map(clear_signature::Blocker::ReadOnly);
         }
         Ok(list)
     }

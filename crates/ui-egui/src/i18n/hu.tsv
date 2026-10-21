@@ -2544,7 +2544,8 @@ animation effects	Off	Ki
 	The fields this signature locked ({names}) can be changed again.	Az aláírás által zárolt mezők ({names}) ismét módosíthatók lesznek.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Más aláírások megmaradnak, ezért a másolat az aláírt fájl frissítéseként mentődik: az eltávolított aláírás a korábbi változatban marad, ahonnan visszaállítható.
 	{names} certifies this document without allowing comments, and will report this change.	{names} megjegyzések engedélyezése nélkül hitelesíti ezt a dokumentumot, és jelezni fogja ezt a módosítást.
-	A document timestamp is not in a field, so it can't be removed on its own.	A dokumentum-időbélyeg nem mezőben van, ezért nem távolítható el önmagában.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	A dokumentum-időbélyeg az egész fájlra vonatkozik, és senkinek sem az aláírása, ezért nem távolítható el önmagában.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} hitelesíti ezt a dokumentumot, és az aláírás eltávolítása nem olyan módosítás, amelyet a hitelesítés megenged.
 	The signature {names} locks this field.	A(z) {names} aláírás zárolja ezt a mezőt.
 	This document can't be changed: {names}	Ez a dokumentum nem módosítható: {names}
+	Choose a signature that can be removed.	Válasszon egy eltávolítható aláírást.

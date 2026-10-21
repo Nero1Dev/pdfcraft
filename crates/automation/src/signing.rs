@@ -356,7 +356,8 @@ impl Automation {
                     Kind::Visual { initials: true } => ("visual_initials", None),
                 };
                 let annotation = match r.target {
-                    Target::Annotation { page, index } => Some(json!({ "page": page + 1, "index": index })),
+                    // 1-based, as comment_list and comment_delete number them.
+                    Target::Annotation { page, index } => Some(json!({ "page": page + 1, "index": index + 1 })),
                     _ => None,
                 };
                 json!({

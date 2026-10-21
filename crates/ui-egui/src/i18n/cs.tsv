@@ -2619,7 +2619,8 @@ animation effects	Off	Vypnuto
 	The fields this signature locked ({names}) can be changed again.	Pole, která tento podpis uzamykal ({names}), bude možné znovu měnit.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Zůstávají jiné podpisy, proto se kopie ukládá jako aktualizace podepsaného souboru: odstraněný podpis zůstane v dřívější revizi, odkud ho lze obnovit.
 	{names} certifies this document without allowing comments, and will report this change.	{names} certifikuje tento dokument bez povolení komentářů a tuto změnu ohlásí.
-	A document timestamp is not in a field, so it can't be removed on its own.	Časové razítko dokumentu není v poli, a proto ho nelze odstranit samostatně.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Časové razítko dokumentu pokrývá celý soubor a není ničím podpisem, a proto ho nelze odstranit samostatně.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} certifikuje tento dokument a odstranění podpisu není změna, kterou jeho certifikace povoluje.
 	The signature {names} locks this field.	Podpis {names} uzamyká toto pole.
 	This document can't be changed: {names}	Tento dokument nelze změnit: {names}
+	Choose a signature that can be removed.	Zvolte podpis, který lze odstranit.

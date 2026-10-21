@@ -39,8 +39,8 @@ The removal is refused, and nothing changes, when:
   Removing the certification signature itself is allowed: the document is then no longer
   certified, and the dialog says so.
 - **Another signature locks the field** (FieldMDP `/Lock`, actions All, Include or Exclude).
-- **It is a document timestamp** (`/ETSI.RFC3161` outside a field): there is no field to remove it
-  from.
+- **It is a document timestamp** (`/ETSI.RFC3161`, in a field or not): it covers the whole file
+  and is not a signer's signature to clear.
 - **The document can't be changed** (read-only, or its security doesn't allow changes).
 
 PdfCraft never works around a certification, a lock or a document's security.

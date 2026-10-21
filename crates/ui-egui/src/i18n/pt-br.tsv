@@ -2559,7 +2559,8 @@ animation effects	Off	Desativados
 	The fields this signature locked ({names}) can be changed again.	Os campos que esta assinatura bloqueava ({names}) poderão ser alterados de novo.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Outras assinaturas continuam, então a cópia é salva como atualização do arquivo assinado: a assinatura removida fica na revisão anterior, de onde pode ser recuperada.
 	{names} certifies this document without allowing comments, and will report this change.	{names} certifica este documento sem permitir comentários e vai indicar esta alteração.
-	A document timestamp is not in a field, so it can't be removed on its own.	Um carimbo de data/hora do documento não fica num campo, então não pode ser removido sozinho.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Um carimbo de data/hora do documento cobre o arquivo inteiro e não é a assinatura de ninguém, então não pode ser removido sozinho.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} certifica este documento, e remover uma assinatura não é uma alteração permitida por essa certificação.
 	The signature {names} locks this field.	A assinatura {names} bloqueia este campo.
 	This document can't be changed: {names}	Este documento não pode ser alterado: {names}
+	Choose a signature that can be removed.	Escolha uma assinatura que possa ser removida.

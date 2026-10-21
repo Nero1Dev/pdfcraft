@@ -115,7 +115,9 @@ impl Blocker {
     /// As [`Effect::wording`].
     pub fn wording(&self) -> (&'static str, String) {
         match self {
-            Blocker::DocumentTimestamp => ("A document timestamp is not in a field, so it can't be removed on its own.", String::new()),
+            Blocker::DocumentTimestamp => {
+                ("A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.", String::new())
+            }
             Blocker::CertifiedBy(n) => {
                 ("{names} certifies this document, and removing a signature is not a change its certification permits.", n.clone())
             }
@@ -175,6 +177,8 @@ pub enum ClearError {
     NoSuchField(String),
     #[error("{0:?} is not signed")]
     NotSigned(String),
+    #[error("{0:?} is a document timestamp, which can't be removed on its own")]
+    DocumentTimestamp(String),
     #[error("{name:?} can't be removed: the signature {by:?} certifies this document, and removing a signature is not a change it permits")]
     CertifiedBy { name: String, by: String },
     #[error("{name:?} can't be removed: the signature {by:?} locks this field")]
@@ -237,6 +241,12 @@ impl Lock {
             _ => None,
         }
     }
+}
+
+/// A document timestamp's dictionary (ISO 32000-2 §12.8.5): `/SubFilter /ETSI.RFC3161`, typed
+/// `/DocTimeStamp` or, as older writers have it, `/Sig`.
+fn is_doc_timestamp(d: &Dict) -> bool {
+    d.name(b"SubFilter") == Some(b"ETSI.RFC3161") && matches!(d.name(b"Type"), Some(b"DocTimeStamp" | b"Sig"))
 }
 
 fn catalog_doc_mdp(doc: &Document) -> Option<ObjRef> {
@@ -310,7 +320,11 @@ pub fn removable(doc: &Document, signatures: &[SignatureInfo]) -> Vec<Removable>
                     None if s.doc_timestamp => Kind::DocumentTimestamp,
                     None => Kind::Digital,
                 };
-                (kind, Target::Field(f.name.clone()), blocker(&fields, &f.name).map(|(b, _)| b))
+                // A document timestamp in a field (as ISO 32000-2 stores it) is never removable on
+                // its own either.
+                let blocked =
+                    if kind == Kind::DocumentTimestamp { Some(Blocker::DocumentTimestamp) } else { blocker(&fields, &f.name).map(|(b, _)| b) };
+                (kind, Target::Field(f.name.clone()), blocked)
             }
         };
         let mut effects = Vec::new();
@@ -428,6 +442,9 @@ pub fn clear(doc: &mut Document, name: &str, remove_field: bool) -> Result<Clear
         }
         None => return Err(ClearError::NoSuchField(name.into())),
     };
+    if is_doc_timestamp(&target.value_dict) {
+        return Err(ClearError::DocumentTimestamp(name.into()));
+    }
     if let Some((_, e)) = blocker(&fields, name) {
         return Err(e);
     }
@@ -722,6 +739,25 @@ mod tests {
         assert!(list.is_empty(), "nothing validated, nothing listed");
         assert_eq!(clear(&mut doc, "Seller", true).map(|c| c.removed_field), Ok(true));
         assert_eq!(names(&doc), ["Buyer"]);
+    }
+
+    #[test]
+    fn a_document_timestamp_in_a_field_is_refused() {
+        let (mut doc, page, form) = base();
+        let (_, v) = signed(&mut doc, page, form, "Timestamp1", vec![]);
+        doc.update_dict(v, |d| {
+            d.set(b"Type".to_vec(), Object::name("DocTimeStamp"));
+            d.set(b"SubFilter".to_vec(), Object::name("ETSI.RFC3161"));
+        })
+        .unwrap();
+        let before = doc.clone();
+        assert_eq!(clear(&mut doc, "Timestamp1", true), Err(ClearError::DocumentTimestamp("Timestamp1".into())));
+        assert_eq!((doc.get(form), annots(&doc, page)), (before.get(form), annots(&before, page)));
+        // Listed as a timestamp and blocked, as validation reports it.
+        let info = pdfcraft_sign::pdf::list(&doc, &[], &pdfcraft_sign::pdf::TrustStore::default());
+        let list = removable(&doc, &info);
+        assert_eq!(list.len(), 1, "{list:?}");
+        assert_eq!((&list[0].kind, &list[0].blocked), (&Kind::DocumentTimestamp, &Some(Blocker::DocumentTimestamp)));
     }
 
     #[test]

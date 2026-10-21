@@ -2543,7 +2543,8 @@ animation effects	Off	Өшірулі
 	The fields this signature locked ({names}) can be changed again.	Бұл қолтаңба құлыптаған өрістерді ({names}) қайта өзгертуге болады.
 	Other signatures remain, so the copy is saved as an update of the signed file: the removed signature stays in its earlier revision, where it can be recovered.	Басқа қолтаңбалар қалғандықтан, көшірме қол қойылған файлдың жаңартуы ретінде сақталады: алып тасталған қолтаңба алдыңғы редакцияда қалады, оны сол жерден қалпына келтіруге болады.
 	{names} certifies this document without allowing comments, and will report this change.	{names} бұл құжатты түсініктемелерге рұқсат бермей куәландырады және бұл өзгерісті хабарлайды.
-	A document timestamp is not in a field, so it can't be removed on its own.	Құжаттың уақыт белгісі өрісте емес, сондықтан оны жеке алып тастау мүмкін емес.
+	A document timestamp covers the whole file and is no one's signature, so it can't be removed on its own.	Құжаттың уақыт белгісі бүкіл файлды қамтиды және ешкімнің қолтаңбасы емес, сондықтан оны жеке алып тастау мүмкін емес.
 	{names} certifies this document, and removing a signature is not a change its certification permits.	{names} бұл құжатты куәландырады, ал қолтаңбаны алып тастау бұл куәландыру рұқсат ететін өзгеріс емес.
 	The signature {names} locks this field.	{names} қолтаңбасы бұл өрісті құлыптайды.
 	This document can't be changed: {names}	Бұл құжатты өзгерту мүмкін емес: {names}
+	Choose a signature that can be removed.	Алып тастауға болатын қолтаңбаны таңдаңыз.
