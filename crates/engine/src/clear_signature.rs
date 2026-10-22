@@ -660,7 +660,7 @@ pub fn problems(doc: &Document) -> Vec<String> {
 mod tests {
     //! Structures the signer doesn't write (field locks, hierarchies, shared arrays, damaged
     //! files), built by hand. The `/V` dictionaries hold no cryptography: only the structure is
-    //! under test here; `tests/clear_signature.rs` covers real signatures.
+    //! under test here; `tests/it/clear_signature.rs` covers real signatures.
 
     use pdfcraft_cos::PdfString;
 
