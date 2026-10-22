@@ -2739,3 +2739,7 @@ key	Space	Mellomrom
 	The signature {names} locks this field.	Signaturen {names} låser dette feltet.
 	This document can't be changed: {names}	Dette dokumentet kan ikke endres: {names}
 	Choose a signature that can be removed.	Velg en signatur som kan fjernes.
+
+# Page gaps (AI-assisted, not separately native-reviewed)
+	Show gaps between pages	Vis mellomrom mellom sidene
+	Hide gaps to join page edges. Margins inside the PDF remain unchanged.	Skjul mellomrommene slik at sidekantene møtes. Margene inne i PDF-en endres ikke.
