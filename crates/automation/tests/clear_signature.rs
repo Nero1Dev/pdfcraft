@@ -89,12 +89,14 @@ fn removing_a_signature_and_saving_a_new_file_keeps_the_original() {
     let r = ok(&mut a, "sign_clear", json!({ "doc": doc, "field": two }));
     assert_eq!(r["signed"], true, "the first signature remains");
     assert_eq!(std::fs::read(dir.join("signed.pdf")).unwrap(), original, "nothing is written until saved");
-    // A full rewrite would break the remaining signature: refused, so save incrementally.
-    match a.call("doc_save", &json!({ "doc": doc, "path": "unsigned.pdf" })) {
+    // A full rewrite would break the remaining signature: refused when asked for, and not what
+    // saving to a new path does by default while the document is signed.
+    match a.call("doc_save", &json!({ "doc": doc, "path": "unsigned.pdf", "full": true })) {
         Err(ToolError::Failed(m)) => assert!(m.contains("signed"), "{m}"),
         other => panic!("a full rewrite of a signed document must be refused: {other:?}"),
     }
-    let saved = ok(&mut a, "doc_save", json!({ "doc": doc, "path": "unsigned.pdf", "full": false }));
+    assert!(!dir.join("unsigned.pdf").exists(), "a refused save writes nothing");
+    let saved = ok(&mut a, "doc_save", json!({ "doc": doc, "path": "unsigned.pdf" }));
     assert_eq!(saved["incremental"], true);
     assert_eq!(std::fs::read(dir.join("signed.pdf")).unwrap(), original, "the original is untouched");
     let new = std::fs::read(dir.join("unsigned.pdf")).unwrap();
