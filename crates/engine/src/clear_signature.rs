@@ -39,7 +39,7 @@ pub enum Kind {
     /// A certification signature with its DocMDP level (1: no changes, 2: form filling and
     /// signing, 3: also comments).
     Certification(u8),
-    /// A document timestamp: a signature over the whole file that isn't in a field.
+    /// A document timestamp: a signature over the whole file, in a field or not.
     DocumentTimestamp,
     /// A Fill & Sign signature (or initials): an annotation, with no cryptography behind it.
     Visual { initials: bool },
@@ -79,7 +79,7 @@ pub enum Effect {
 /// Why a listed signature can't be removed.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Blocker {
-    /// A document timestamp isn't a field: there's nothing to remove it from.
+    /// A document timestamp, in a field or not: it covers the whole file and is no one's signature.
     DocumentTimestamp,
     /// Another signature certifies the document, and removing a signature is not a change any
     /// certification level permits.
