@@ -706,6 +706,7 @@ pub fn tools() -> Vec<ToolDef> {
             .with(schema(json!({ "doc": doc() }), &["doc"])),
         t("sign_clear", "Remove a signature", "Remove one signature from sign_removable, chosen by field (a digital signature) or item (its index there, any kind). By default a digital signature's field and its widgets are removed from the form; with keep_field: true only its value and appearance go, leaving an empty field to sign again; a certification entry naming it goes too. A visual signature's annotation is deleted. Refused, changing nothing, when sign_removable says it isn't removable. Nothing is written until the document is saved: save to a new path to keep the original. With no signature left, Save As to a new file writes a clean copy without earlier revisions; otherwise the save is incremental and the removed signature stays recoverable in the earlier revision. Undoable.")
             .destructive()
+            .cmd("sign.remove")
             .with(schema(json!({ "doc": doc(), "field": { "type": "string" }, "item": { "type": "integer", "minimum": 0 }, "keep_field": { "type": "boolean" } }), &["doc"])),
         t("sign_id_create", "Create a digital ID", "Create a self-signed digital ID and save it as a password-protected .p12 file (Acrobat: Configure a new digital ID ▸ Create a new digital ID ▸ Save to file). Default key: 2048-bit RSA, valid 5 years.").with(schema(
             json!({
