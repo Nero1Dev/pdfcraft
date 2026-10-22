@@ -295,9 +295,8 @@ fn signed_fields(doc: &Document) -> Vec<SignedField> {
 
 /// The fields a lock covers, among the document's.
 fn locked_names(doc: &Document, lock: &Lock, except: &str) -> Vec<String> {
-    let mut names: Vec<String> = pdfcraft_forms::fields(doc).into_iter().map(|f| f.name).filter(|n| n != except && lock.covers(n)).collect();
-    names.dedup();
-    names
+    let mut seen = HashSet::new();
+    pdfcraft_forms::fields(doc).into_iter().map(|f| f.name).filter(|n| n != except && lock.covers(n) && seen.insert(n.clone())).collect()
 }
 
 /// The signatures that can be listed for removal, digital ones first in revision order, then
@@ -571,15 +570,16 @@ fn drop_certification(doc: &mut Document, value: Option<ObjRef>, value_dict: &Di
     Ok(true)
 }
 
-/// Clear the `/SigFlags` bits that no longer hold: AppendOnly once nothing is signed, and
-/// SignaturesExist once there is no signature field. Returns whether it changed.
+/// Clear the `/SigFlags` bits that no longer hold: AppendOnly once nothing is signed (a
+/// standalone document timestamp, outside any field, still counts), and SignaturesExist once
+/// there is no signature field. Returns whether it changed.
 fn update_sig_flags(doc: &mut Document) -> Result<bool, ClearError> {
     let Some(root) = doc.root() else { return Ok(false) };
     let entry = doc.get(root).as_dict().and_then(|d| d.get(b"AcroForm").cloned());
     let Some(af) = entry.as_ref().map(|e| doc.resolve(e)).and_then(|a| a.as_dict().cloned()) else { return Ok(false) };
     let Some(flags) = af.get(b"SigFlags").and_then(|f| doc.resolve(f).as_int()) else { return Ok(false) };
     let any_field = pdfcraft_forms::fields(doc).iter().any(|f| f.kind == FieldKind::Signature);
-    let any_signed = !signed_fields(doc).is_empty();
+    let any_signed = !signed_fields(doc).is_empty() || has_standalone_timestamp(doc);
     let mut next = flags;
     if !any_signed {
         next &= !APPEND_ONLY;
@@ -606,6 +606,13 @@ fn update_sig_flags(doc: &mut Document) -> Result<bool, ClearError> {
         }
     }
     Ok(true)
+}
+
+/// Whether the document holds a document timestamp outside any field (ISO 32000-2 §12.8.2.2),
+/// which [`signed_fields`] doesn't see. Scans every object, so it runs only once no signed
+/// field is left.
+fn has_standalone_timestamp(doc: &Document) -> bool {
+    doc.scan_objects().any(|(_, o)| o.as_dict().is_some_and(|d| is_doc_timestamp(d) && d.contains(b"ByteRange")))
 }
 
 /// Broken references in the parts of the document a removal touches: page annotations, the
@@ -767,6 +774,27 @@ mod tests {
         let list = removable(&doc, &info);
         assert_eq!(list.len(), 1, "{list:?}");
         assert_eq!((&list[0].kind, &list[0].blocked), (&Kind::DocumentTimestamp, &Some(Blocker::DocumentTimestamp)));
+    }
+
+    #[test]
+    fn a_standalone_document_timestamp_keeps_append_only_after_the_last_field_goes() {
+        let sig_flags = |doc: &Document, form: ObjRef| doc.get(form).as_dict().unwrap().get(b"SigFlags").and_then(Object::as_int);
+        // Without a timestamp, removing the only signature clears both bits.
+        let (mut doc, page, form) = base();
+        signed(&mut doc, page, form, "Buyer", vec![]);
+        assert_eq!(clear(&mut doc, "Buyer", true).map(|c| c.sig_flags), Ok(true));
+        assert_eq!(sig_flags(&doc, form), None);
+        // A document timestamp in no field still covers the file: AppendOnly stays.
+        let (mut doc, page, form) = base();
+        signed(&mut doc, page, form, "Buyer", vec![]);
+        doc.add(dict(vec![
+            (b"Type", Object::name("DocTimeStamp")),
+            (b"SubFilter", Object::name("ETSI.RFC3161")),
+            (b"ByteRange", Object::Array(vec![0.into(), 0.into(), 0.into(), 0.into()])),
+            (b"Contents", PdfString::literal(vec![0u8; 8]).into()),
+        ]));
+        assert_eq!(clear(&mut doc, "Buyer", true).map(|c| c.sig_flags), Ok(true));
+        assert_eq!(sig_flags(&doc, form), Some(APPEND_ONLY));
     }
 
     #[test]

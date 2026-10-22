@@ -337,6 +337,8 @@ struct Editor {
     unsaved_file: bool,
     undo: Vec<Snapshot>,
     redo: Vec<Snapshot>,
+    /// See [`Document::edit_position`].
+    position: u64,
     keys: Keys,
     /// Display appearances built for annotations without any, reused while no annotation edit
     /// runs (content edits leave every annotation dictionary alone). Cleared on any refresh
@@ -693,6 +695,13 @@ impl Document {
     /// What Redo would redo, in parts.
     pub fn redo_label(&self) -> Option<&Label> {
         self.editor.as_ref().and_then(|e| e.redo.last()).map(|(l, ..)| l)
+    }
+
+    /// How many edits are applied, net of undo and redo: an edit or a redo raises it by one, an
+    /// undo lowers it by one. Unlike the undo history it has no cap, so an interface can note it
+    /// and later undo back to exactly that point.
+    pub fn edit_position(&self) -> Option<u64> {
+        self.editor.as_ref().map(|e| e.position)
     }
 
     pub fn editable(&self) -> bool {
@@ -3691,6 +3700,7 @@ impl Session {
                         unsaved_file: false,
                         undo: Vec::new(),
                         redo: Vec::new(),
+                        position: 0,
                         keys,
                         appearances: AppearanceCache::default(),
                         field_appearances: pdfcraft_forms::FieldAppearanceCache::default(),
@@ -3941,6 +3951,9 @@ impl Session {
             }
             return Err(e);
         }
+        if let Some(ed) = doc.editor.as_mut() {
+            ed.position += 1;
+        }
         doc.dirty = true;
         doc.generation += 1;
         doc.edit_notices = notices;
@@ -3988,6 +4001,9 @@ impl Session {
             }
             return Err(e);
         }
+        if let Some(ed) = doc.editor.as_mut() {
+            ed.position -= 1;
+        }
         doc.edit_notices.clear();
         Self::sync_dirty(doc);
         doc.generation += 1;
@@ -4016,6 +4032,9 @@ impl Session {
                 Self::show_released(doc);
             }
             return Err(e);
+        }
+        if let Some(ed) = doc.editor.as_mut() {
+            ed.position += 1;
         }
         doc.edit_notices.clear();
         Self::sync_dirty(doc);

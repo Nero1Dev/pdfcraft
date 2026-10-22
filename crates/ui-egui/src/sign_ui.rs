@@ -1417,8 +1417,8 @@ impl PdfCraftApp {
         #[cfg(target_arch = "wasm32")]
         {
             let _ = stem;
-            let label = match self.apply_removal(id, &chosen, keep_field) {
-                Ok(label) => label,
+            let mark = match self.apply_removal(id, &chosen, keep_field) {
+                Ok(mark) => mark,
                 Err(e) => {
                     self.notify_fmt("The signature was not removed: {e}", &[("e", &e)]);
                     return;
@@ -1426,14 +1426,14 @@ impl PdfCraftApp {
             };
             let saved = self.views.iter().position(|v| v.id == id).is_some_and(|index| self.save_view(index, crate::SaveTarget::As));
             if !saved {
-                self.undo_back_through(id, label);
+                self.undo_back_to(id, mark);
             }
         }
     }
 
     /// Remove `chosen` from document `id` (undoable) and check that it is gone; if it isn't,
-    /// undo it again. Returns the removal's undo label, for [`Self::undo_back_through`].
-    fn apply_removal(&mut self, id: DocId, chosen: &Removable, keep_field: bool) -> Result<&'static str, String> {
+    /// undo it again. Returns the edit position before the removal, for [`Self::undo_back_to`].
+    fn apply_removal(&mut self, id: DocId, chosen: &Removable, keep_field: bool) -> Result<u64, String> {
         let visuals =
             |app: &Self| app.session.removable_signatures(id).map(|l| l.iter().filter(|r| matches!(r.kind, RemoveKind::Visual { .. })).count());
         let before = visuals(self).map_err(|e| e.to_string())?;
@@ -1442,7 +1442,7 @@ impl PdfCraftApp {
             RemoveTarget::Annotation { page, index } => pdfcraft_engine::Edit::DeleteAnnotation { page: *page, index: *index },
             RemoveTarget::None => return Err(tl!("this signature can't be removed on its own").to_string()),
         };
-        let label = edit.label().wording;
+        let mark = self.session.get(id).and_then(|doc| doc.edit_position()).unwrap_or_default();
         self.session.apply(id, edit).map_err(|e| e.to_string())?;
         let gone = match &chosen.target {
             RemoveTarget::Field(f) => {
@@ -1456,18 +1456,16 @@ impl PdfCraftApp {
             self.refresh_view_of(id);
             return Err(tl!("it was still in the document afterwards, so the change was undone").to_string());
         }
-        Ok(label)
+        Ok(mark)
     }
 
-    /// Undo edits until the one labelled `label` is undone: the removal, and whatever saving
-    /// added after it (flattening Fill & Sign marks, when that preference is on).
-    fn undo_back_through(&mut self, id: DocId, label: &str) {
-        // A save adds at most one edit of its own; the bound keeps a mismatch from undoing more.
-        for _ in 0..4 {
-            match self.session.undo(id) {
-                Ok(undone) if undone.wording == label => break,
-                Ok(_) => {}
-                Err(_) => break,
+    /// Undo edits back to edit position `mark`, noted before the removal: the removal, and
+    /// whatever saving added after it (flattening Fill & Sign marks, when that preference is
+    /// on), and never an edit the user made before it.
+    fn undo_back_to(&mut self, id: DocId, mark: u64) {
+        while self.session.get(id).and_then(|doc| doc.edit_position()).is_some_and(|p| p > mark) {
+            if self.session.undo(id).is_err() {
+                break;
             }
         }
         self.refresh_view_of(id);
@@ -1490,8 +1488,8 @@ impl PdfCraftApp {
             self.notify_tr("Choose another file: the original is kept as it is, and the version without the signature is saved next to it.");
             return;
         }
-        let label = match self.apply_removal(id, chosen, keep_field) {
-            Ok(label) => label,
+        let mark = match self.apply_removal(id, chosen, keep_field) {
+            Ok(mark) => mark,
             Err(e) => {
                 self.notify_fmt("The signature was not removed: {e}", &[("e", &e)]);
                 return;
@@ -1499,7 +1497,7 @@ impl PdfCraftApp {
         };
         if !self.save_doc_to(id, dest, crate::SaveTarget::As) {
             // The save said why; the document goes back to how it was.
-            self.undo_back_through(id, label);
+            self.undo_back_to(id, mark);
             return;
         }
         let Some(doc) = self.session.get(id) else { return };
