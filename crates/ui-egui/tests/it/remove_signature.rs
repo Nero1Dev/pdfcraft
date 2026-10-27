@@ -6,6 +6,8 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable;
 use pdfcraft_ui_egui::{PdfCraftApp, SignStep};
 
+use crate::support;
+
 const FIXTURE: &[u8] = b"%PDF-1.7
 1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
 2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
@@ -49,7 +51,7 @@ fn signed(dir: &std::path::Path) -> Harness<'static, PdfCraftApp> {
         d.password = "test".into();
     }
     h.run_steps(2);
-    h.get_by_label("Sign").click();
+    support::outside_menus(&h, "Sign").click();
     h.run_steps(6);
     assert!(h.state().session.get(h.state().views[0].id).unwrap().is_signed(), "the fixture is signed");
     h
