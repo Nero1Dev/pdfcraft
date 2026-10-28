@@ -1,6 +1,7 @@
 use super::{
-    AddedContent, Arc, Edit, EditError, FieldValue, ImageEdit, NewAnnotation, Shape, a11y, copy_image, decode_data_file, embed_image, fit_picture,
-    image_content_type, is_xfa_data_file, js, mark_source, measure, open_source, strip_xfa, unrestricted, xfa, xfa_after_data_change,
+    AddedContent, Arc, Edit, EditError, FieldValue, ImageEdit, NewAnnotation, Shape, a11y, clear_signature, copy_image, decode_data_file,
+    embed_image, fit_picture, image_content_type, is_xfa_data_file, js, mark_source, measure, open_source, strip_xfa, unrestricted, xfa,
+    xfa_after_data_change,
 };
 
 /// Whether the opening password allows an edit (§7.6.4.2, Table 22).
@@ -448,7 +449,7 @@ pub(crate) fn run_edit(doc: &mut pdfcraft_cos::Document, edit: &Edit, cx: &mut E
         }
         Edit::DeleteField { name } => pdfcraft_forms::delete_field(doc, name)?,
         Edit::ClearSignature { field, remove_field } => {
-            crate::clear_signature::clear(doc, field, *remove_field).map_err(|e| EditError::Sign(e.to_string()))?;
+            clear_signature::clear(doc, field, *remove_field).map_err(|e| EditError::Sign(e.to_string()))?;
         }
         Edit::SetTabOrder { pages, order } => pdfcraft_forms::set_tab_order(doc, pages, *order)?,
         Edit::MoveInTabOrder { name, earlier } => pdfcraft_forms::move_in_tab_order(doc, name, *earlier)?,
